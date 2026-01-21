@@ -6,3 +6,4 @@ public interface IServiceLocatable
     void OnServiceAdded();
     void OnServiceRemoved();
 }
+
