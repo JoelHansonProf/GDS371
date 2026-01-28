@@ -1,3 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/shuckle.png","/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/bin/DesktopGL/Content/shuckle.xnb","TextureProcessor","Texture2DContent",62726,6310229,0.117866
-"/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/smallShuckle.png","/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/bin/DesktopGL/Content/smallShuckle.xnb","TextureProcessor","Texture2DContent",2781,16469,0.040766
+"/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/Content/shuckle.png","/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/Content/bin/DesktopGL/Content/shuckle.xnb","TextureProcessor","Texture2DContent",62726,6310229,0.2118975
+"/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/Content/smallShuckle.png","/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/Content/bin/DesktopGL/Content/smallShuckle.xnb","TextureProcessor","Texture2DContent",2781,16469,0.0012581
