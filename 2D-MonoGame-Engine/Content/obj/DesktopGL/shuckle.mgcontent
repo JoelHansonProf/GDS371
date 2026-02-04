@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/shuckle.png</SourceFile>
+  <SourceFile>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/shuckle.png</SourceFile>
   <SourceTime>2026-01-07T08:52:46.9849337-05:00</SourceTime>
-  <DestFile>/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/bin/DesktopGL/shuckle.xnb</DestFile>
-  <DestTime>2026-01-07T09:03:44.5444012-05:00</DestTime>
+  <DestFile>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/bin/DesktopGL/shuckle.xnb</DestFile>
+  <DestTime>2026-02-02T09:27:01.3274512-05:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2025-10-20T10:25:32-04:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

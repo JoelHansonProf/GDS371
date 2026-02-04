@@ -36,8 +36,9 @@ public class MainGame : Game
         // TODO: Add your initialization logic here
         Globals.windowSize = new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         Globals.ContentManager = Content;
+        Globals.Graphics = _graphics;
         GameManager manager = new GameManager();
-       
+        Globals.Camera = new Camera.Camera(GraphicsDevice.Viewport);
         //Forcing a state change to get the game going
         //This is THE ONLY TIME YOU WILL BE DIRECTLY CALLING THIS METHOD
         //Every other time is in the state itself
@@ -78,6 +79,9 @@ public class MainGame : Game
         _currentState.onStateChanged += OnStateSwitch;
         //Load the new state
         _currentState.LoadContent(Content);
+        
+        //Set the Globals.CurrentState
+        Globals.CurrentState = newState;
     }
     
     //State -> State Change REquest -> main game "Oh time to change states" -> Actual state change
@@ -101,7 +105,7 @@ public class MainGame : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // TODO: Add your drawing code here
-        _spriteBatch.Begin();
+        _spriteBatch.Begin(transformMatrix: Globals.Camera.GetViewMatrix());
         
         _currentState.Draw(_spriteBatch);
         

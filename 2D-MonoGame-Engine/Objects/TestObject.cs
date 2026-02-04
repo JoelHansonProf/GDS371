@@ -23,16 +23,30 @@ public class TestObject : GameObject
     public TestObject()
     {
         AddComponent<SpriteRenderer>(Globals.ContentManager.Load<Texture2D>("smallShuckle"), transform);
+        
+        var SpriteRenderer = GetComponent<SpriteRenderer>();
         //AddComponent<TestComponent>();
         
         ServiceLocator.Instance.GetService(typeof(GameManager), out _gameManager);
+
+        AddComponent<BoxCollider>(false, new Rectangle(transform.Position.ToPoint(), SpriteRenderer.size.ToPoint()));
+        
+        var boxCollider = GetComponent<BoxCollider>();
+        boxCollider.debugDraw = true;
+        boxCollider.queryRange = 20;
+        boxCollider.onCollisionEnter += (otherCollider) =>
+        {
+            Console.WriteLine($"Collision with {otherCollider.owner.GetType().Name}");
+        };
     }
 
     public override void Update(GameTime gameTime)
     {
-        base.Update(gameTime);
-        
+        //BUG:: base.Update(gameTime) was here
         transform.Position += velocity * (float)gameTime.ElapsedGameTime.TotalSeconds * moveSpeed;
+        //Round position to nearest pixel
+        transform.Position = new Vector2(MathF.Round(transform.Position.X), MathF.Round(transform.Position.Y));
+        base.Update(gameTime);
     }
     
     //Just moving

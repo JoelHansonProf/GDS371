@@ -1,3 +1,5 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/shuckle.png","/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/bin/DesktopGL/shuckle.xnb","TextureProcessor","Texture2DContent",62726,6310229,0.130752
-"/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/smallShuckle.png","/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/bin/DesktopGL/smallShuckle.xnb","TextureProcessor","Texture2DContent",2781,16469,0.05441
+"/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/DirtTile.png","/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/bin/DesktopGL/DirtTile.xnb","TextureProcessor","Texture2DContent",346,4181,0.05358
+"/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/shuckle.png","/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/bin/DesktopGL/shuckle.xnb","TextureProcessor","Texture2DContent",62726,6310229,0.074594
+"/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/smallShuckle.png","/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/bin/DesktopGL/smallShuckle.xnb","TextureProcessor","Texture2DContent",2781,16469,0.001501
+"/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/tyranitar.png","/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/bin/DesktopGL/tyranitar.xnb","TextureProcessor","Texture2DContent",972,36949,0.058746

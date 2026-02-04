@@ -10,6 +10,7 @@ public class SpriteRenderer : Component
     
     private Texture2D _texture;
     private Vector2 _origin;
+    public Vector2 size => new Vector2(_texture.Width, _texture.Height);
     public Vector2 Origin { get; }
 
     public Color color { get; set; } = Color.White;

@@ -4,10 +4,14 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/shuckle.png</File>
-    <File>/Users/squizy/Downloads/2D-MonoGame-Engine/2D-MonoGame-Engine/Content/smallShuckle.png</File>
+    <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/DirtTile.png</File>
+    <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/shuckle.png</File>
+    <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/smallShuckle.png</File>
+    <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/tyranitar.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>

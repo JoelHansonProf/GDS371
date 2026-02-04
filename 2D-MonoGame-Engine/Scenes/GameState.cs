@@ -14,6 +14,7 @@ public abstract class GameState
     //HashSet just wants to Update/Draw ticks
     private readonly HashSet<GameObject> _gameObjects = new HashSet<GameObject>();
 
+    
     //Going to be handled for collision detection
     public QuadTree<GameObject> LevelQuadTree { get; set; }
     
@@ -21,6 +22,8 @@ public abstract class GameState
 
     public abstract void UnloadContent(ContentManager content);
 
+    
+    
     //For future use
     public abstract void HandleInput(GameTime gameTime);
  
