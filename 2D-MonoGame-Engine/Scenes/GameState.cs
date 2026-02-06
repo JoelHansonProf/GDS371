@@ -17,6 +17,7 @@ public abstract class GameState
     private readonly HashSet<GameObject> _gameObjects = new HashSet<GameObject>();
 
     //Going to be handled for collision detection
+    //UPDATED This to handle BoxColliders
     public QuadTree<BoxCollider> LevelQuadTree { get; set; }
     
     public abstract void LoadContent(ContentManager content);
