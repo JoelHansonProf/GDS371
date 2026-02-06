@@ -61,7 +61,7 @@ public class QuadTree<T> where T : IQuadTreeObject<T>
             {
                 Console.WriteLine("Added to objects");
                 _objects.Add(item);
-                item.QuadTreeNode = this;
+                item.CurrentNode = this;
                 return true;
             }
 
@@ -89,22 +89,26 @@ public class QuadTree<T> where T : IQuadTreeObject<T>
 
     public Rectangle Bounds => _bounds;
     
+    
+    //Dynamically updates the quad tree.
     public void DynamicallyUpdate()
     {
-        Console.WriteLine("Dynamically updating quad tree");
+        //Check if any objects have moved out of bounds
         foreach (var obj in _objects)
         {
-            if (obj.QuadTreeNode != null)
+            if (obj.CurrentNode != null)
             {
-                if (!obj.QuadTreeNode.Bounds.Contains(obj.GetPosition().ToPoint()))
+                if (!obj.CurrentNode.Bounds.Contains(obj.GetPosition().ToPoint()))
                 {
-                    obj.QuadTreeNode.Remove(obj);
+                    obj.CurrentNode.Remove(obj);
                     
+                    //Reinsert into the root node
                     GetRootNode().Insert(obj);
                 }
             }
         }
 
+        //If subdivided, recursively call the method on children
         if (_subdivided)
         {
             _northEast.DynamicallyUpdate();

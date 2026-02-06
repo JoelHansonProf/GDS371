@@ -118,7 +118,7 @@ public class BoxCollider : Component, IQuadTreeObject<BoxCollider>
         }
     }
 
-    public QuadTree<BoxCollider> QuadTreeNode { get; set; }
+    public QuadTree<BoxCollider> CurrentNode { get; set; }
 
     public Vector2 GetPosition()
     {
