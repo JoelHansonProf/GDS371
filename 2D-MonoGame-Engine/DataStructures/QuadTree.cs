@@ -2,19 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _2D_MonoGame_Engine.Debug;
+using _2D_MonoGame_Engine.Interfaces;
 using _2D_MonoGame_Engine.Objects.Base;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace _2D_MonoGame_Engine.DataStructures;
 
-public class QuadTree<T> where T : GameObject
+public class QuadTree<T> where T : IQuadTreeObject<T>
 {
     private readonly int NODE_CAPACITY = 4;
 
     private HashSet<T> _objects = new HashSet<T>();
 
-
+    
+    private bool _dynamicallyResize = false;
+    public bool DynamicallyResize => _dynamicallyResize;
     //The initial bound of our quad tree
     private Rectangle _bounds;
 
@@ -26,20 +29,24 @@ public class QuadTree<T> where T : GameObject
 
 
     private bool _subdivided = false;
-
+    private QuadTree<T> _parent;
     public bool debug = false;
 
-    public QuadTree(Rectangle bounds, int capacity = 4)
+    public QuadTree(Rectangle bounds, int capacity = 4, QuadTree<T> parent = null, bool dynamicallyResize = false)
     {
         _bounds = bounds;
         NODE_CAPACITY = capacity;
+        _dynamicallyResize = dynamicallyResize;
+        
+        if(parent != null) _parent = parent;
     }
 
     public bool Insert(T item)
     {
         try
         {
-            Point itemPoint = item.transform.Position.ToPoint();
+            
+            Point itemPoint = item.GetPosition().ToPoint();
 
             Console.WriteLine("Attempting to insert: " + item + "");
 
@@ -54,6 +61,7 @@ public class QuadTree<T> where T : GameObject
             {
                 Console.WriteLine("Added to objects");
                 _objects.Add(item);
+                item.QuadTreeNode = this;
                 return true;
             }
 
@@ -79,6 +87,52 @@ public class QuadTree<T> where T : GameObject
         return false;
     }
 
+    public Rectangle Bounds => _bounds;
+    
+    public void DynamicallyUpdate()
+    {
+        Console.WriteLine("Dynamically updating quad tree");
+        foreach (var obj in _objects)
+        {
+            if (obj.QuadTreeNode != null)
+            {
+                if (!obj.QuadTreeNode.Bounds.Contains(obj.GetPosition().ToPoint()))
+                {
+                    obj.QuadTreeNode.Remove(obj);
+                    
+                    GetRootNode().Insert(obj);
+                }
+            }
+        }
+
+        if (_subdivided)
+        {
+            _northEast.DynamicallyUpdate();
+            _northWest.DynamicallyUpdate();
+            _southEast.DynamicallyUpdate();
+            _southWest.DynamicallyUpdate();
+        }
+    }
+
+
+
+    public bool Remove(T item)
+    {
+        if(_objects.Contains(item)) return _objects.Remove(item);
+        
+        else if(_subdivided) return (_northEast.Remove(item) || _northWest.Remove(item) || _southEast.Remove(item) || _southWest.Remove(item));
+
+        return false;
+    }
+
+
+    public QuadTree<T> GetRootNode()
+    {
+        if(_parent == null) return this;
+        
+        return _parent.GetRootNode();
+    }
+
     private void Subdivide()
     {
         //Get the x and y of the bounds
@@ -90,10 +144,11 @@ public class QuadTree<T> where T : GameObject
         int halfHeight = _bounds.Size.Y / 2;
         
         //Create the children
-        _northWest = new QuadTree<T>(new Rectangle(x, y, halfWidth, halfHeight));
-        _northEast = new QuadTree<T>(new Rectangle(x + halfWidth, y, halfWidth, halfHeight));
-        _southWest = new QuadTree<T>(new Rectangle(x, y+halfHeight, halfWidth, halfHeight));
-        _southEast = new QuadTree<T>(new Rectangle(x + halfWidth, y+halfHeight, halfWidth, halfHeight));
+        _northWest = new QuadTree<T>(new Rectangle(x, y, halfWidth, halfHeight),dynamicallyResize: _dynamicallyResize, parent: this);
+        _northEast = new QuadTree<T>(new Rectangle(x + halfWidth, y, halfWidth, halfHeight),dynamicallyResize: _dynamicallyResize, parent: this);
+        _southWest = new QuadTree<T>(new Rectangle(x, y+halfHeight, halfWidth, halfHeight),dynamicallyResize: _dynamicallyResize, parent: this);
+        _southEast = new QuadTree<T>(new Rectangle(x + halfWidth, y+halfHeight, halfWidth, halfHeight),dynamicallyResize: _dynamicallyResize, parent: this);
+        
         
         //Set the same settings as the parent
         _northWest.debug = debug;
@@ -121,6 +176,7 @@ public class QuadTree<T> where T : GameObject
         //This is NO LONGER HOLDING ON TO ANY OBJECTS
         _objects.Clear();
     }
+    
 
     public List<T> QueryRange(Rectangle range)
     {
@@ -134,13 +190,11 @@ public class QuadTree<T> where T : GameObject
 
         for (int i = 0; i < _objects.Count; i++)
         {
-            //Get the position of the object
-            var objectPostion = _objects.ElementAt(i).transform.Position;
-            //Convert Vector2 to Point
-            Point pointOfObject = objectPostion.ToPoint();
-            
             //If the point is in the range, add it to the list
-            if (range.Contains(pointOfObject))
+            //The difference between Contains and Intersects is that
+            //Contains will return true IF THE ORIGIN POINT is within the bounds.
+            //Intersects will return true IF ANY PART OF THE BOUNDING BOX IS WITHIN THE RANGE.
+            if (range.Intersects(_objects.ElementAt(i).GetBounds()))
             {
                 pointsQueried.Add(_objects.ElementAt(i));
             }

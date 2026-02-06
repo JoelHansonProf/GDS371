@@ -141,3 +141,5 @@
 /Users/squizy/Documents/GDS371/2D-MonoGame-Engine/obj/Debug/net9.0/ref/2D-MonoGame-Engine.dll
 /Users/squizy/Documents/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/DirtTile.xnb
 /Users/squizy/Documents/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/tyranitar.xnb
+/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/DirtTile.xnb
+/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/tyranitar.xnb

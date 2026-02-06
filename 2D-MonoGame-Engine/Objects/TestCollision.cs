@@ -14,7 +14,7 @@ public class TestCollision : GameObject
        var random = new Random();
        
        AddComponent<SpriteRenderer>(Globals.ContentManager.Load<Texture2D>("tyranitar"),transform);
-       AddComponent<BoxCollider>(false, new Rectangle(transform.Position.ToPoint(), GetComponent<SpriteRenderer>().size.ToPoint()));
+       AddComponent<BoxCollider>(false, new Rectangle(transform.Position.ToPoint(), GetComponent<SpriteRenderer>().Size.ToPoint()));
        transform.Position = new Vector2(random.Next(0,2000), random.Next(0, 2000));
        GetComponent<BoxCollider>().debugDraw = true;
    }

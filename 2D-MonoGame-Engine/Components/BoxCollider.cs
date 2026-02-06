@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using _2D_MonoGame_Engine.DataStructures;
 using _2D_MonoGame_Engine.Debug;
+using _2D_MonoGame_Engine.Interfaces;
 using _2D_MonoGame_Engine.Objects.Base;
 using _2D_MonoGame_Engine.World;
 using Microsoft.Xna.Framework;
@@ -8,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace _2D_MonoGame_Engine.Components;
 
-public class BoxCollider : Component
+public class BoxCollider : Component, IQuadTreeObject<BoxCollider>
 {
 
     public Rectangle Bounds;
@@ -68,12 +70,12 @@ public class BoxCollider : Component
         //Inflate the box by the query range
         queryBox.Inflate(queryRange, queryRange);
 
-        List<GameObject> objectsNearOwner = Globals.CurrentState.LevelQuadTree.QueryRange(queryBox);
+        List<BoxCollider> objectsNearOwner = Globals.CurrentState.LevelQuadTree.QueryRange(queryBox);
 
         //Check for objects entering collision
         for (int i = 0; i < objectsNearOwner.Count; i++)
         {
-            BoxCollider otherCollider = objectsNearOwner[i].GetComponent<BoxCollider>();
+            BoxCollider otherCollider = objectsNearOwner[i];
 
             //If we picked up the same object, ignore it
             if (owner == otherCollider.owner)
@@ -96,7 +98,7 @@ public class BoxCollider : Component
         //Check for objects leaving
         for(int i = 0; i < currentlyCollidingWith.Count; i++)
         {
-            if (!objectsNearOwner.Contains(currentlyCollidingWith[i].owner))
+            if (!objectsNearOwner.Contains(currentlyCollidingWith[i]))
             {
                 currentlyCollidingWith.RemoveAt(i);
                 i--;
@@ -106,9 +108,25 @@ public class BoxCollider : Component
 
     public override void Draw(SpriteBatch spriteBatch)
     {
+        
+        Rectangle queryBox = Bounds;
+        queryBox.Inflate(queryRange, queryRange);
         if (debugDraw)
         {
-            DebugGfx.DrawRectangle(spriteBatch,Bounds, _isColliding ? Color.Red : Color.Green, thickness:3);
+            DebugGfx.DrawRectangle(spriteBatch,Bounds, _isColliding ? Color.Red : Color.Green, thickness:1);
+            DebugGfx.DrawRectangle(spriteBatch,queryBox, Color.BlanchedAlmond, thickness:1);
         }
+    }
+
+    public QuadTree<BoxCollider> QuadTreeNode { get; set; }
+
+    public Vector2 GetPosition()
+    {
+        return owner.transform.Position;
+    }
+
+    public Rectangle GetBounds()
+    {
+        return Bounds;
     }
 }

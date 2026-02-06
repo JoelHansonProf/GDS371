@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using _2D_MonoGame_Engine.Components;
 using _2D_MonoGame_Engine.DataStructures;
 using _2D_MonoGame_Engine.Objects.Base;
+using _2D_MonoGame_Engine.World;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -14,16 +16,13 @@ public abstract class GameState
     //HashSet just wants to Update/Draw ticks
     private readonly HashSet<GameObject> _gameObjects = new HashSet<GameObject>();
 
-    
     //Going to be handled for collision detection
-    public QuadTree<GameObject> LevelQuadTree { get; set; }
+    public QuadTree<BoxCollider> LevelQuadTree { get; set; }
     
     public abstract void LoadContent(ContentManager content);
 
     public abstract void UnloadContent(ContentManager content);
 
-    
-    
     //For future use
     public abstract void HandleInput(GameTime gameTime);
  
@@ -44,12 +43,12 @@ public abstract class GameState
 
         
         if(addToQuadTree)
-            LevelQuadTree.Insert(gameObject);
+            LevelQuadTree.Insert(gameObject.GetComponent<BoxCollider>());
         
         return true;
     }
 
-    public bool AddToQuadTree(GameObject gameObject)
+    public bool AddToQuadTree(BoxCollider gameObject)
     {
         return LevelQuadTree.Insert(gameObject);
     }
@@ -65,6 +64,13 @@ public abstract class GameState
         {
             gameObject.Update(gameTime);
         }
+
+        if (LevelQuadTree is { DynamicallyResize: true })
+        {
+            LevelQuadTree.DynamicallyUpdate();
+        }
+        
+        Globals.Camera.Update(gameTime);
     }
     
     public virtual void Draw(SpriteBatch spriteBatch)

@@ -29,7 +29,7 @@ public class TestObject : GameObject
         
         ServiceLocator.Instance.GetService(typeof(GameManager), out _gameManager);
 
-        AddComponent<BoxCollider>(false, new Rectangle(transform.Position.ToPoint(), SpriteRenderer.size.ToPoint()));
+        AddComponent<BoxCollider>(false, new Rectangle(transform.Position.ToPoint(), SpriteRenderer.Size.ToPoint()));
         
         var boxCollider = GetComponent<BoxCollider>();
         boxCollider.debugDraw = true;

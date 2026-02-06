@@ -295,19 +295,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/squizy/.nuget/packages/": {}
+    "/home/sirmcsquizy/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/2D-MonoGame-Engine.csproj",
+      "projectUniqueName": "/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/2D-MonoGame-Engine.csproj",
       "projectName": "2D-MonoGame-Engine",
-      "projectPath": "/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/2D-MonoGame-Engine.csproj",
-      "packagesPath": "/Users/squizy/.nuget/packages/",
-      "outputPath": "/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/obj/",
+      "projectPath": "/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/2D-MonoGame-Engine.csproj",
+      "packagesPath": "/home/sirmcsquizy/.nuget/packages/",
+      "outputPath": "/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/squizy/.nuget/NuGet/NuGet.Config"
+        "/home/sirmcsquizy/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -363,7 +363,7 @@
             "version": "[9.0.11, 9.0.11]"
           },
           {
-            "name": "Microsoft.NETCore.App.Host.osx-arm64",
+            "name": "Microsoft.NETCore.App.Host.linux-x64",
             "version": "[9.0.11, 9.0.11]"
           },
           {
@@ -376,7 +376,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/Users/squizy/.dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/home/sirmcsquizy/.dotnet/sdk/10.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

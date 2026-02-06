@@ -50,7 +50,6 @@ public class InputWrapper : SingletonBehaviour<InputWrapper>
 
     public void CheckForKeyBoardInput(KeyboardState keyboardState)
     {
-        Console.WriteLine("Test");
         foreach (var action in actions.Values)
         {
             action.CheckForInput(keyboardState);

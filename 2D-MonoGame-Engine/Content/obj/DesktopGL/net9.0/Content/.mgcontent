@@ -4,10 +4,10 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/DirtTile.png</File>
-    <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/shuckle.png</File>
-    <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/smallShuckle.png</File>
-    <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/tyranitar.png</File>
+    <File>/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/Content/DirtTile.png</File>
+    <File>/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/Content/shuckle.png</File>
+    <File>/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/Content/smallShuckle.png</File>
+    <File>/home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/Content/tyranitar.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
