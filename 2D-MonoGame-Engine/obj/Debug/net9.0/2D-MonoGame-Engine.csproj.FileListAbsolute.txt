@@ -143,3 +143,6 @@
 /Users/squizy/Documents/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/tyranitar.xnb
 /home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/DirtTile.xnb
 /home/sirmcsquizy/Documents/College/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/tyranitar.xnb
+/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/tiles.xnb
+/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/stockphoto.xnb
+/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/gameFont.xnb
