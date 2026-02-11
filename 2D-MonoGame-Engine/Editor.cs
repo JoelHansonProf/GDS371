@@ -18,9 +18,12 @@ public class Editor : Game
 
     //Grid values
     private int[,] _grid;
-    private int _gridWidth = 100;
-    private int _gridHeight = 100;
-
+    private int _gridWidth = 200;
+    private int _gridHeight = 200;
+    private int _gridOffestX = 0;
+    private int _gridOffestY = 0;
+    
+    
     //TWO Folder
     // Size of the tiles themselves, and the sizes that each sprite should be
     private int _tileSize = 32;
@@ -28,8 +31,9 @@ public class Editor : Game
     //Update Variables
     private Point _selectedTile = new Point(-1, -1);
     private Point _lastMousePosition = Point.Zero;
-    
-    
+
+    //Panning
+    private bool _isPanning = false;
     
     //Pallete tool
     private int _paletteOffSetY;
@@ -61,6 +65,10 @@ public class Editor : Game
     {
         _grid = new int[_gridWidth, _gridHeight];
 
+        for(int y = 0; y < _gridHeight; y++)
+            for(int x = 0; x < _gridWidth; x++)
+                _grid[x,y] = -1;
+        
         base.Initialize();
     }
 
@@ -90,11 +98,43 @@ public class Editor : Game
         //Get mouse state
         var mouseState = Mouse.GetState();
         var mousePosition = new Point(mouseState.X, mouseState.Y);
-        
-        //Tile Palette Selection section
-        
-        int maxColumns = _graphics.PreferredBackBufferWidth/ _tileSize;
 
+        if (mouseState.MiddleButton == ButtonState.Pressed)
+        {
+            if (!_isPanning)
+            {
+                _isPanning = true;
+                _lastMousePosition = mouseState.Position;
+            }
+            else
+            {
+                //Get the directional movement
+                Point delta = mousePosition - _lastMousePosition;
+                
+                //Update last Position
+                _lastMousePosition = mousePosition;
+                
+                
+                //subtract the offset
+                _gridOffestX -= (int)Math.Round((float)delta.X / (_tileSize));
+                _gridOffestY -= (int)Math.Round((float)delta.Y / (_tileSize));
+            }
+        }
+        else
+        {
+            _isPanning = false;
+        }
+
+
+
+        //Place Tiles
+        if (mouseState.LeftButton == ButtonState.Pressed && mousePosition.Y < _gridHeight * _tileSize)
+        {
+            PlaceTile(mouseState);
+        }
+
+        //Tile Palette Selection section
+        int maxColumns = GraphicsDevice.Viewport.Width / _tileSize;
         if (mouseState.LeftButton == ButtonState.Pressed && mousePosition.Y >= _paletteOffSetY &&
             mousePosition.Y < _paletteOffSetY + (_tileRectangles.Count / maxColumns + 1) * _tileSize)
         {
@@ -110,6 +150,27 @@ public class Editor : Game
                 
                 Console.WriteLine("Selected Tile: " + _selectedTile);
             }
+        }
+    }
+
+    private void PlaceTile(MouseState mouseState)
+    {
+        int mouseX = mouseState.X;
+        int mouseY = mouseState.Y;
+        
+        //Check to see if mouse is within grid bounds
+        if (mouseX >= _toolPaletteX && mouseX < _toolPaletteX + _toolPaletteWidth) return;
+        if (mouseY >= _paletteOffSetY && mouseY < _paletteOffSetY) return;
+
+        //
+        int x = (mouseState.X / _tileSize) + _gridOffestX;
+        int y = (mouseState.Y / _tileSize) + _gridOffestY;
+
+        //Check to see if the tile is within the grid bounds
+        if (x >= 0 && x < _grid.GetLength(0) && y >= 0 && y < _grid.GetLength(1) && _selectedTile.X != -1)
+        {
+            //Set the tile at the position
+            _grid[x,y] = _selectedTile.Y * (_tileSet.Width/_tileSize) + _selectedTile.X;
         }
     }
 
@@ -130,14 +191,42 @@ public class Editor : Game
     {
         GraphicsDevice.Clear(Color.BlanchedAlmond);
         _spriteBatch.Begin();
-        
+
+        DrawGrid();
         DrawToolsPanel();
         DrawTilePalette();
      
         _spriteBatch.End();
         base.Draw(gameTime);
     }
-    
+
+    public void DrawGrid()
+    {
+        for (int y = 0; y < _gridHeight; y++)
+        {
+            for (int x = 0; x < _gridWidth; x++)
+            {
+                int gridX = x + _gridOffestX;
+                int gridY = y + _gridOffestY;
+                
+                if(gridX < 0 || gridY < 0 || gridX >= _grid.GetLength(0) || gridY >= _grid.GetLength(1)) continue;
+                
+                int tileIndex = _grid[gridX, gridY];
+                _spriteBatch.DrawString(Content.Load<SpriteFont>("gameFont"), $"{tileIndex}", new Vector2(x * _tileSize + _tileSize/2f,y * _tileSize + _tileSize/2f),Color.Black);
+                if (tileIndex != -1)
+                {
+                    var sourceRectangle = _tileRectangles[tileIndex];
+                    
+                    
+                    
+                    //Draw the tile
+                    _spriteBatch.Draw(_tileSet, new Rectangle(x * _tileSize, y * _tileSize, _tileSize, _tileSize), 
+                        sourceRectangle, Color.White);
+                }
+            }
+        }
+    }
+
     public void DrawTilePalette()
     {
         //Draw the tile pallete background
@@ -161,7 +250,7 @@ public class Editor : Game
             
             
             _spriteBatch.Draw(_tileSet, new Rectangle(x,y,_tileSize,_tileSize), sourceRectangle,Color.White);
-            
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("gameFont"), $"{i}", new Vector2(x + _tileSize/2f,y + _tileSize/2f),Color.White);
         }
     }
 
