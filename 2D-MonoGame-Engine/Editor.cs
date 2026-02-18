@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _2D_MonoGame_Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -29,7 +30,7 @@ public class Editor : Game
     private int _tileSize = 32;
 
     //Update Variables
-    private Point _selectedTile = new Point(-1, -1);
+    private int _selectedTile;
     private Point _lastMousePosition = Point.Zero;
 
     //Panning
@@ -44,6 +45,18 @@ public class Editor : Game
     private int _toolPaletteY;
     private int _toolPaletteHeight;
     
+    
+    private int _toolPalettePadding = 10;
+
+    private int _paddingBetweenTiles;
+    //Layering
+    private string[] _layers = { "Background", "Foreground", "Collision" };
+    private string _activeLayer = "Background";
+    
+    //Our new layers
+    private int[,] _backgroundLayer;
+    private int[,] _foregroundLayer;
+    private int[,] _collisionLayer;
     
     public Editor()
     {
@@ -65,10 +78,21 @@ public class Editor : Game
     {
         _grid = new int[_gridWidth, _gridHeight];
 
-        for(int y = 0; y < _gridHeight; y++)
-            for(int x = 0; x < _gridWidth; x++)
-                _grid[x,y] = -1;
         
+        //Create the 3 separate layers
+        _backgroundLayer = new int[_gridWidth, _gridHeight];
+        _foregroundLayer = new int[_gridWidth, _gridHeight];
+        _collisionLayer = new int[_gridWidth, _gridHeight];
+        
+        for(int y = 0; y < _gridHeight; y++)
+        for (int x = 0; x < _gridWidth; x++)
+        {
+            //Default to -1 for empty tiles
+            _backgroundLayer[x,y] = -1;
+            _foregroundLayer[x,y] = -1;
+            _collisionLayer[x,y] = -1;
+        }
+
         base.Initialize();
     }
 
@@ -98,6 +122,23 @@ public class Editor : Game
         //Get mouse state
         var mouseState = Mouse.GetState();
         var mousePosition = new Point(mouseState.X, mouseState.Y);
+        
+        HandlePanning(ref mouseState);
+
+        HandleLayerSwapping(ref mouseState);
+        //Place Tiles
+        if (mouseState.LeftButton == ButtonState.Pressed && mousePosition.Y < _gridHeight * _tileSize)
+        {
+            PlaceTile(mouseState);
+        }
+        
+        HandleTilePaletteSelection(ref mouseState);
+     
+    }
+
+    private void HandlePanning(ref MouseState mouseState)
+    {
+        var mousePosition = new Point(mouseState.X, mouseState.Y);
 
         if (mouseState.MiddleButton == ButtonState.Pressed)
         {
@@ -124,29 +165,55 @@ public class Editor : Game
         {
             _isPanning = false;
         }
+    }
 
+    private void HandleLayerSwapping(ref MouseState mouseState)
+    {
+        int buttonX = _toolPaletteX;
+        int buttonY = _toolPalettePadding + 250;
 
-
-        //Place Tiles
-        if (mouseState.LeftButton == ButtonState.Pressed && mousePosition.Y < _gridHeight * _tileSize)
+        //Loop through the available layers
+        for (int i = 0; i < _layers.Length; i++)
         {
-            PlaceTile(mouseState);
+            //If mouse is pressed and within bounds of the button
+            if (mouseState.LeftButton == ButtonState.Pressed && mouseState.X >= buttonX
+                                                             && mouseState.X < buttonX + 160
+                                                             && mouseState.Y >= buttonY
+                                                             && mouseState.Y < buttonY + 30)
+            {
+                //set the active layer to i
+                _activeLayer = _layers[i];
+            }
+            
+            //Move to the next button
+            buttonY += 30;
         }
+    }
 
+    private void HandleTilePaletteSelection(ref MouseState mouseState)
+    {
+        var mousePosition = new Point(mouseState.X, mouseState.Y);
+        
         //Tile Palette Selection section
-        int maxColumns = GraphicsDevice.Viewport.Width / _tileSize;
+
+        int paddedTileSize = _tileSize + _paddingBetweenTiles;
+        
+        int maxColumns = GraphicsDevice.Viewport.Width / paddedTileSize;
+        
+        
         if (mouseState.LeftButton == ButtonState.Pressed && mousePosition.Y >= _paletteOffSetY &&
             mousePosition.Y < _paletteOffSetY + (_tileRectangles.Count / maxColumns + 1) * _tileSize)
         {
-            int column = mousePosition.X / _tileSize;
-            int row = (mousePosition.Y - _paletteOffSetY) / _tileSize;
+            int column = mousePosition.X / paddedTileSize;
+            int row = (mousePosition.Y - _paletteOffSetY) / paddedTileSize;
             
+            //Get the index of the tile
             int tileIndex = row * maxColumns + column;
 
             if (tileIndex >= 0 && tileIndex < _tileRectangles.Count)
             {
-                _selectedTile = new Point(tileIndex % (_tileSet.Width / _tileSize),
-                    tileIndex / (_tileSet.Height/ _tileSize));
+                //Set the selected tile
+                _selectedTile = tileIndex;
                 
                 Console.WriteLine("Selected Tile: " + _selectedTile);
             }
@@ -160,17 +227,28 @@ public class Editor : Game
         
         //Check to see if mouse is within grid bounds
         if (mouseX >= _toolPaletteX && mouseX < _toolPaletteX + _toolPaletteWidth) return;
-        if (mouseY >= _paletteOffSetY && mouseY < _paletteOffSetY) return;
+        //If mouse is greater than the grid, don't let us draw tiles
+        if (mouseY >= _paletteOffSetY ) return;
 
         //
         int x = (mouseState.X / _tileSize) + _gridOffestX;
         int y = (mouseState.Y / _tileSize) + _gridOffestY;
 
         //Check to see if the tile is within the grid bounds
-        if (x >= 0 && x < _grid.GetLength(0) && y >= 0 && y < _grid.GetLength(1) && _selectedTile.X != -1)
+        if (x >= 0 && x < _grid.GetLength(0) && y >= 0 && y < _grid.GetLength(1) && _selectedTile != -1)
         {
-            //Set the tile at the position
-            _grid[x,y] = _selectedTile.Y * (_tileSet.Width/_tileSize) + _selectedTile.X;
+            switch (_activeLayer)
+            {
+                case "Background":
+                    _backgroundLayer[x, y] = _selectedTile;
+                    break;
+                case "Foreground":
+                    _foregroundLayer[x, y] = _selectedTile;
+                    break;
+                case "Collision":
+                    _collisionLayer[x, y] = _selectedTile;
+                    break;
+            }
         }
     }
 
@@ -178,11 +256,17 @@ public class Editor : Game
     {
         _tileRectangles = new List<Rectangle>();
 
+        Color[] textureData = new Color[_tileSet.Width * _tileSet.Height];
+        _tileSet.GetData(textureData);
+        
         for (int y = 0; y < _tileSet.Height / _tileSize; y++)
         {
             for (int x = 0; x < _tileSet.Width / _tileSize; x++)
             {
-                _tileRectangles.Add(new Rectangle(x * _tileSize, y * _tileSize, _tileSize, _tileSize));
+                var sourceRectangle = new Rectangle(x * _tileSize, y * _tileSize, _tileSize, _tileSize);
+                
+                if(sourceRectangle.IsTileEmpty(textureData,_tileSet.Width))
+                    _tileRectangles.Add(sourceRectangle);
             }
         }
     }
@@ -192,12 +276,46 @@ public class Editor : Game
         GraphicsDevice.Clear(Color.BlanchedAlmond);
         _spriteBatch.Begin();
 
-        DrawGrid();
+        //DrawGrid();
+        DrawLayer(_backgroundLayer, "Background");
+        DrawLayer(_foregroundLayer, "Foreground");
+        DrawLayer(_collisionLayer, "Collision");
+        
         DrawToolsPanel();
         DrawTilePalette();
+      
      
         _spriteBatch.End();
         base.Draw(gameTime);
+    }
+
+
+    public void DrawLayer(int[,] layer, string layerName)
+    {
+                            //SHort hand if statement    True           False
+        Color alphaColor = (layerName == _activeLayer) ? Color.White : new Color(255, 255, 255, 128);
+        
+        for (int y = 0; y < _gridHeight; y++)
+        {
+            for (int x = 0; x < _gridWidth; x++)
+            {
+                int gridX = x + _gridOffestX;
+                int gridY = y + _gridOffestY;
+                
+                if(gridX < 0 || gridY < 0 || gridX >= _grid.GetLength(0) || gridY >= _grid.GetLength(1)) continue;
+                
+                int tileIndex = layer[gridX, gridY];
+              
+                if (tileIndex != -1)
+                {
+                    var sourceRectangle = _tileRectangles[tileIndex];
+                    
+                    //Draw the tile
+                    _spriteBatch.Draw(_tileSet, new Rectangle(x * _tileSize, y * _tileSize, _tileSize, _tileSize), 
+                        sourceRectangle, alphaColor);
+                }
+            }
+        }
     }
 
     public void DrawGrid()
@@ -233,7 +351,8 @@ public class Editor : Game
         _spriteBatch.Draw(_editorBG, new Rectangle(0,_paletteOffSetY,GraphicsDevice.Viewport.Width,_paletteOffSetY),Color.White);
         
         //Max columns is the number of tiles that fit on the screen width wise
-        int maxColumns = GraphicsDevice.Viewport.Width / _tileSize;
+        int paddedTileSize = _tileSize + _paddingBetweenTiles;
+        int maxColumns = GraphicsDevice.Viewport.Width / paddedTileSize;
 
         for (int i = 0; i < _tileRectangles.Count; i++)
         {
@@ -242,8 +361,8 @@ public class Editor : Game
             int column = i % maxColumns;
             
             //Set position of each tile
-            int x = column * _tileSize;
-            int y = _paletteOffSetY + row * _tileSize;
+            int x = column * paddedTileSize;
+            int y = _paletteOffSetY + row * paddedTileSize;
             
             //Get the source rectangle
             var sourceRectangle = _tileRectangles[i];
@@ -261,18 +380,41 @@ public class Editor : Game
         
         _spriteBatch.DrawString(Content.Load<SpriteFont>("gameFont"), "Tools Panel", new Vector2(_toolPaletteX+ _toolPaletteWidth/2f - 7,10),Color.White);
 
-        if (_selectedTile.X >= 0 && _selectedTile.Y >= 0)
+        if (_selectedTile != -1)
         {
-            //Get the index
-            int selectedTileIndex = _selectedTile.Y * (_tileSet.Width / _tileSize) + _selectedTile.X;
+            
             //Create a rectangle
             var selectedTileRectangle = new Rectangle(_toolPaletteX + 20, 400 /2, _tileSize * 2, _tileSize * 2) ;
             //Draw the currently selected tile
-            _spriteBatch.Draw(_tileSet, selectedTileRectangle, _tileRectangles[selectedTileIndex],Color.White);
+            _spriteBatch.Draw(_tileSet, selectedTileRectangle, _tileRectangles[_selectedTile],Color.White);
             //OPtional
             _spriteBatch.DrawString(Content.Load<SpriteFont>("gameFont"), 
-                $"Tile: {_selectedTile.X},{_selectedTile.Y}", new Vector2(_toolPaletteX + 20 + _tileSize * 2 + 10,  400 /2f +10),Color.White);
+                $"Tile:{_selectedTile}", new Vector2(_toolPaletteX + 20 + _tileSize * 2 + 10,  400 /2f +10),Color.White);
         }
 
+        DrawLayerSwitching();
+    }
+
+    private void DrawLayerSwitching()
+    {
+        int buttonX = _toolPaletteX;
+        int buttonY = _toolPalettePadding + 250;
+
+
+        for (int i = 0; i < _layers.Length; i++)
+        {
+            var layerName = _layers[i];
+            //active color
+            Color buttonColor = (_activeLayer == layerName) ? Color.Red : Color.White;
+            
+            //Draw the button Background
+            _spriteBatch.Draw(Content.Load<Texture2D>("square"), new Rectangle(buttonX, buttonY, 100, 30), buttonColor);
+            
+            //Draw the text
+            _spriteBatch.DrawString(Content.Load<SpriteFont>("gameFont"), layerName, new Vector2(buttonX, buttonY ), Color.White);
+            
+            //Move to the next button
+            buttonY += 30;
+        }
     }
 }

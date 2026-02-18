@@ -8,11 +8,13 @@
     <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/gameFont.spritefont</File>
     <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/shuckle.png</File>
     <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/smallShuckle.png</File>
+    <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/square.png</File>
     <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/stockphoto.jpg</File>
     <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/tiles.png</File>
     <File>/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/Content/tyranitar.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

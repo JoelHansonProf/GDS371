@@ -146,3 +146,4 @@
 /Users/squizy/Documents/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/tiles.xnb
 /Users/squizy/Documents/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/stockphoto.xnb
 /Users/squizy/Documents/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/gameFont.xnb
+/Users/squizy/Documents/GDS371/2D-MonoGame-Engine/bin/Debug/net9.0/Content/square.xnb
